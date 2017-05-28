@@ -1,12 +1,19 @@
 ﻿namespace Infestation.CommandHendlers
 {
     using System;
+    using Factories;
 
     public class SupplementCommand : CommandHandlerBase
     {
+        private readonly ISupplementFactory supplementFactory;
+
+        public SupplementCommand(ISupplementFactory supplementFactory)
+        {
+            this.supplementFactory = supplementFactory;
+        }
         protected override bool CanHandle(string command)
         {
-            throw new NotImplementedException();
+            return command == "supplement";
         }
 
         protected override string ProccessCommandInternal(string command)
