@@ -5,6 +5,8 @@ using System.Text;
 
 namespace Infestation
 {
+    using Units;
+
     public struct UnitInfo
     {
         public string Id { get; private set; }

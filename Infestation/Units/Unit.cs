@@ -1,11 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Infestation
+﻿namespace Infestation.Units
 {
-    abstract public class Unit
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using Supplements;
+
+    abstract public class Unit : IUnit
     {
         public string Id { get; private set; }
 

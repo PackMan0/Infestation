@@ -5,6 +5,9 @@ using System.Text;
 
 namespace Infestation
 {
+    using Supplements;
+    using Units;
+
     public class InfestationPen : HoldingPen
     {
         public InfestationPen()

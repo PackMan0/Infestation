@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Infestation
+﻿namespace Infestation.Units
 {
+    using System.Collections.Generic;
+    using Supplements;
+
     public class Marine : Human
     {
         public Marine(string id)
