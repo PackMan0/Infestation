@@ -1,6 +1,8 @@
 ﻿namespace Infestation.Units
 {
     using System.Collections.Generic;
+    using Enums;
+    using Interactions;
     using Supplements;
 
     public interface IUnit
@@ -11,10 +13,10 @@
         UnitInfo Info { get; }
         bool IsDestroyed { get; }
         int Power { get; }
-        UnitClassification UnitClassification { get; }
+        UnitClassifications UnitClassification { get; }
 
         void AddSupplement(ISupplement newSupplement);
-        Interaction DecideInteraction(IEnumerable<UnitInfo> units);
+        InteractionBase DecideInteraction(IEnumerable<UnitInfo> units);
         void DecreaseBaseHealth(int quantity);
         string ToString();
     }

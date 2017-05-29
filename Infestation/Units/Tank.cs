@@ -1,5 +1,7 @@
 ﻿namespace Infestation.Units
 {
+    using Enums;
+
     public class Tank : Unit
     {
         const int TankPower = 25;
@@ -7,7 +9,7 @@
         const int TankAggression = 25;
 
         public Tank(string id)
-            : base(id, UnitClassification.Mechanical, Tank.TankHealth, Tank.TankPower, Tank.TankAggression)
+            : base(id, UnitClassifications.Mechanical, TankHealth, TankPower, TankAggression, UnitClassifications.Psionic)
         {
         }
     }

@@ -4,19 +4,24 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using Enums;
+    using Interactions;
     using Supplements;
 
     abstract public class Unit : IUnit
     {
-        public string Id { get; private set; }
 
-        public UnitClassification UnitClassification { get; private set; }
+        private int health;
+        private int power;
+        private int aggression;
+        private UnitClassifications classificationToInteract;
+        private ICollection<ISupplement> supplements;
 
-        private int baseHealth;
-        private int basePower;
-        private int baseAggression;
+        public string Id { get; }
 
-        public virtual int Health 
+        public UnitClassifications UnitClassification { get; }
+
+        public virtual int Health
         {
             get
             {
@@ -26,7 +31,7 @@
                     supplementsBonus += supplement.HealthEffect;
                 }
 
-                return this.baseHealth + supplementsBonus;
+                return this.health + supplementsBonus;
             }
         }
         public virtual int Power
@@ -39,7 +44,7 @@
                     supplementsBonus += supplement.PowerEffect;
                 }
 
-                return this.basePower + supplementsBonus;
+                return this.power + supplementsBonus;
             }
         }
         public virtual int Aggression
@@ -52,11 +57,9 @@
                     supplementsBonus += supplement.AggressionEffect;
                 }
 
-                return this.baseAggression + supplementsBonus;
+                return this.aggression + supplementsBonus;
             }
         }
-
-        private ICollection<ISupplement> supplements;
         //public ICollection<ISupplement> Supplements
         //{
         //    get
@@ -74,21 +77,22 @@
         //    }
         //}
 
-        public Unit(string id, UnitClassification unitType, int health, int power, int aggression)
+        public Unit(string id, UnitClassifications unitType, int health, int power, int aggression, UnitClassifications classificationToInteract)
         {
             this.Id = id;
             this.UnitClassification = unitType;
 
-            this.baseHealth = health;
-            this.basePower = power;
-            this.baseAggression = aggression;
+            this.health = health;
+            this.power = power;
+            this.aggression = aggression;
+            this.classificationToInteract = classificationToInteract;
 
             this.supplements = new List<ISupplement>();
         }
 
         public void DecreaseBaseHealth(int quantity)
         {
-            this.baseHealth -= quantity;
+            this.health -= quantity;
         }
 
         public virtual void AddSupplement(ISupplement newSupplement)
@@ -116,10 +120,10 @@
             string unitSignature = this.GetType().Name + " " + this.Id + " (" + this.UnitClassification + ")";
 
             return String.Format("{0} [Health: {1}, Power: {2}, Aggression: {3}, Supplements: [{4}]]",
-                unitSignature, this.Health, this.Power, this.Aggression, supplementsBuilder.ToString());
+                unitSignature, this.Health, this.Power, this.Aggression, supplementsBuilder);
         }
 
-        public virtual Interaction DecideInteraction(IEnumerable<UnitInfo> units)
+        public virtual InteractionBase DecideInteraction(IEnumerable<UnitInfo> units)
         {
             IEnumerable<UnitInfo> attackableUnits = units.Where((unit) => this.CanAttackUnit(unit));
 
@@ -130,13 +134,13 @@
                 return new Interaction(new UnitInfo(this), optimalAttackableUnit, InteractionType.Attack);
             }
 
-            return Interaction.PassiveInteraction;
+            return InteractionBase.PassiveInteraction;
         }
 
         protected virtual UnitInfo GetOptimalAttackableUnit(IEnumerable<UnitInfo> attackableUnits)
         {
             //This method finds the unit with the least power and attacks it
-            UnitInfo optimalAttackableUnit = new UnitInfo(null, UnitClassification.Unknown, 0, int.MaxValue, 0);
+            UnitInfo optimalAttackableUnit = new UnitInfo(null, UnitClassifications.Unknown, 0, int.MaxValue, 0);
 
             foreach (var unit in attackableUnits)
             {
@@ -173,6 +177,11 @@
             {
                 return this.Health <= 0;
             }
+        }
+
+        public UnitClassifications ClassificationToInteract
+        {
+            get { return this.classificationToInteract; }
         }
     }
 }

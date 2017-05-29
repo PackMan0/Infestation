@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Infestation
+namespace Infestation.Providers
 {
-    public enum InteractionType
+    public interface IInputOutputProvider: IWriter, IReader
     {
-        Attack,
-        Infest,
     }
 }

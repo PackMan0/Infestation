@@ -1,9 +1,11 @@
 ﻿namespace Infestation.Factories
 {
+    using Enums;
+    using Supplements;
     using Units;
 
     public interface IUnitFactory
     {
-        IUnit CreateUnit(string type, string id);
+        IUnit CreateUnit(UnitTypes type, string id);
     }
 }

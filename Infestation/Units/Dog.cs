@@ -1,5 +1,7 @@
 ﻿namespace Infestation.Units
 {
+    using Enums;
+
     public class Dog : Unit
     {
         const int DogPower = 5;
@@ -7,7 +9,7 @@
         const int DogHealth = 4;
 
         public Dog(string id) :
-            base(id, UnitClassification.Biological, Dog.DogHealth, Dog.DogPower, Dog.DogAggression)
+            base(id, UnitClassifications.Biological, DogHealth, DogPower, DogAggression, UnitClassifications.Biological)
         {
         }
     }

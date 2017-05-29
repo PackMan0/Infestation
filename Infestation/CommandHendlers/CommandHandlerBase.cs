@@ -6,16 +6,16 @@
     {
         private ICommandHandlerProcessor Successor { get; set; }
 
-        public virtual string ProcessCommand(string command)
+        public virtual void ProcessCommand(ICommand command)
         {
             if (this.CanHandle(command))
             {
-                return this.ProccessCommandInternal(command);
+                this.ProccessCommandInternal(command);
             }
 
             if (this.Successor != null)
             {
-                return this.Successor.ProcessCommand(command);
+                this.Successor.ProcessCommand(command);
             }
 
             throw new InvalidOperationException();
@@ -26,8 +26,8 @@
             this.Successor = commandHandler;
         }
 
-        protected abstract bool CanHandle(string command);
+        protected abstract bool CanHandle(ICommand command);
 
-        protected abstract string ProccessCommandInternal(string command);
+        protected abstract void ProccessCommandInternal(ICommand command);
     }
 }

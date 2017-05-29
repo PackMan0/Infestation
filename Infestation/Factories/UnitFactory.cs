@@ -1,28 +1,35 @@
 ﻿namespace Infestation.Factories
 {
     using System;
+    using Enums;
+    using Supplements;
     using Units;
 
     public class UnitFactory : IUnitFactory
     {
-        public IUnit CreateUnit(string type, string id)
+        private ISupplementFactory supplementFactory;
+
+        public UnitFactory(ISupplementFactory supplementFactory)
+        {
+            this.supplementFactory = supplementFactory;
+        }
+
+        public IUnit CreateUnit(UnitTypes type, string id)
         {
             switch (type)
             {
-                case "Dog":
+                case UnitTypes.Dog:
                     return new Dog(id);
-                case "Human":
+                case UnitTypes.Human:
                     return new Human(id);
-                case "Marine":
-                    return new Dog(id);
-                case "Parasite":
-                    return new Human(id);
-                case "Queen":
-                    return new Dog(id);
-                case "Tank":
-                    return new Human(id);
-                default:
-                    throw new ArgumentException("Wrong unit type");
+                case UnitTypes.Marine:
+                    return new Marine(id, this.supplementFactory.CreateSupplement(SupplementTypes.WeaponrySkill));
+                case UnitTypes.Parasite:
+                    return new Parasite(id);
+                case UnitTypes.Queen:
+                    return new Queen(id);
+                case UnitTypes.Tank:
+                    return new Tank(id);
             }
         }
     }

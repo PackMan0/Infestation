@@ -3,12 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Enums;
+    using Interactions;
     using Units;
 
     public class HoldingPen
     {
-        private List<Unit> containedUnits = new List<Unit>();
-
         public void ParseCommand(string command)
         {
             string[] commandWordSeparators = new string[] { " " };
@@ -40,28 +40,15 @@
             }
         }
 
-        private void ExecutePrintStatusCommand()
-        {
-            foreach (var unit in this.containedUnits)
-            {
-                Console.WriteLine(unit);
-            }
-        }
-
-        protected virtual void ExecuteAddSupplementCommand(string[] commandWords)
-        {
-            throw new NotImplementedException();
-        }
-
         protected virtual void ExecuteProceedSingleIterationCommand()
         {
             var containedUnitsInfo = this.containedUnits.Select((unit) => unit.Info);
 
-            IEnumerable<Interaction> requestedInteractions =
+            IEnumerable<InteractionBase> requestedInteractions =
                 from unit in this.containedUnits
                 select unit.DecideInteraction(containedUnitsInfo);
 
-            requestedInteractions = requestedInteractions.Where((interaction) => interaction != Interaction.PassiveInteraction);
+            requestedInteractions = requestedInteractions.Where((interaction) => interaction != InteractionBase.PassiveInteraction);
 
             foreach (var interaction in requestedInteractions)
             {
@@ -71,7 +58,7 @@
             this.containedUnits.RemoveAll((unit) => unit.IsDestroyed);
         }
 
-        protected virtual void ProcessSingleInteraction(Interaction interaction)
+        protected virtual void ProcessSingleInteraction(InteractionBase interaction)
         {
             switch (interaction.InteractionType)
             {
@@ -83,39 +70,6 @@
                 default:
                     break;
             }
-        }
-
-        protected Unit GetUnit(string unitId)
-        {
-            return this.containedUnits.FirstOrDefault((unit) => unit.Id == unitId);
-        }
-
-        protected Unit GetUnit(UnitInfo unitInfo)
-        {
-            return this.GetUnit(unitInfo.Id);
-            //return this.containedUnits.FirstOrDefault((unit) => unit.Id == unitInfo.Id);
-        }
-
-        protected virtual void ExecuteInsertUnitCommand(string[] commandWords)
-        {
-            switch (commandWords[1])
-            {
-                case "Dog":
-                    var dog = new Dog(commandWords[2]);
-                    this.InsertUnit(dog);
-                    break;
-                case "Human":
-                    var human = new Human(commandWords[2]);
-                    this.InsertUnit(human);
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        protected void InsertUnit(Unit unit)
-        {
-            this.containedUnits.Add(unit);
         }
     }
 }

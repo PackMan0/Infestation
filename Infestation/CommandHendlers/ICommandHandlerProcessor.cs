@@ -2,6 +2,6 @@
 {
     public interface ICommandHandlerProcessor
     {
-        string ProcessCommand(string command);
+        void ProcessCommand(ICommand command);
     }
 }
