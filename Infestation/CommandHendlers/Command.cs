@@ -52,6 +52,7 @@
                         if (Enum.TryParse(commandParams[1], out this._unitType) || Enum.TryParse(commandParams[1], out this._supplementType))
                         {
                             this._unitId = commandParams[2];
+                            return true;
                         }
                         else
                         {
@@ -65,7 +66,6 @@
                     this._writer.Write("Wrong command!");
                     return false;
                 }
-                return true;
             }
 
             return false;
