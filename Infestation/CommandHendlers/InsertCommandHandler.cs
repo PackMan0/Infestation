@@ -8,32 +8,25 @@
 
     public class InsertCommandHandler : CommandHandlerBase
     {
-        private readonly IUnitFactory unitFactory;
-        private readonly IInsertUnit insertUnit;
+        private readonly IUnitFactory _unitFactory;
+        private readonly IInsertUnit _insertUnit;
 
         public InsertCommandHandler(IUnitFactory unitFactory, IInsertUnit insertUnit)
         {
-            this.unitFactory = unitFactory;
-            this.insertUnit = insertUnit;
+            this._unitFactory = unitFactory;
+            this._insertUnit = insertUnit;
         }
 
         protected override bool CanHandle(ICommand command)
         {
-            return command.Type == CommandTypes.Insert;
+            return command.CommandType == CommandTypes.Insert;
         }
 
         protected override void ProccessCommandInternal(ICommand command)
         {
-            UnitTypes type;
+                IUnit unit = this._unitFactory.CreateUnit(command.UnitType, command.UnitId);
 
-            if (Enum.TryParse(command.Parameters[0], out type))
-            {
-                string id = command.Parameters[1];
-
-                IUnit unit = this.unitFactory.CreateUnit(type, id);
-
-                this.insertUnit.InsertUnit(unit);
-            }
+                this._insertUnit.InsertUnit(unit);
         }
     }
 }

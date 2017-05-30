@@ -9,7 +9,7 @@
         const int TankAggression = 25;
 
         public Tank(string id)
-            : base(id, UnitClassifications.Mechanical, TankHealth, TankPower, TankAggression, UnitClassifications.Psionic)
+            : base(id, UnitClassifications.Mechanical, TankHealth, TankPower, TankAggression, UnitClassifications.Psionic, false)
         {
         }
     }

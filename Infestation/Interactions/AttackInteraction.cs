@@ -11,7 +11,7 @@
 
         public override void ExecuteInteraction()
         {
-            this.TargetUnit.DecreaseBaseHealth(this.SourceUnit.Power);
+            this.TargetUnit.DecreaseHealth(this.SourceUnit.Power);
         }
     }
 }

@@ -5,27 +5,16 @@ using System.Text;
 
 namespace Infestation
 {
+    using Ninject;
+
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            HoldingPen pen = InitializePen();
-            StartOperations(pen);
-        }
+            IKernel kernel = new StandardKernel(new InfestationModule());
 
-        private static void StartOperations(HoldingPen pen)
-        {
-            string input = Console.ReadLine();
-            while (input != "end")
-            {
-                pen.ParseCommand(input);
-                input = Console.ReadLine();
-            }
-        }
-
-        private static HoldingPen InitializePen()
-        {
-            return new InfestationPen();
+            IHoldingPen engine = kernel.Get<IHoldingPen>();
+            engine.Start();
         }
     }
 }

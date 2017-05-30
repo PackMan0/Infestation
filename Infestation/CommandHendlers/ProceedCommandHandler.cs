@@ -8,27 +8,25 @@
 
     public class ProceedCommandHandler : CommandHandlerBase
     {
-        private readonly ITakeAllUnits takeAllUnits;
-        private readonly IInteractionFactory interactionFactory;
+        private readonly ITakeInteractions _takeAllUnits;
 
-        public ProceedCommandHandler(ITakeAllUnits takeAllUnits, IInteractionFactory interactionFactory)
+        public ProceedCommandHandler(ITakeInteractions takeAllUnits)
         {
-            this.takeAllUnits = takeAllUnits;
-            this.interactionFactory = interactionFactory;
+            this._takeAllUnits = takeAllUnits;
         }
 
         protected override bool CanHandle(ICommand command)
         {
-            return command.Type == CommandTypes.Proceed;
+            return command.CommandType == CommandTypes.Proceed;
         }
 
         protected override void ProccessCommandInternal(ICommand command)
         {
-            var allUnits = this.takeAllUnits.TakeAllUnits();
+            var allInteractions = this._takeAllUnits.TakeInteractions();
 
-            foreach (var unit in allUnits)
+            foreach (var interaction in allInteractions)
             {
-                
+                interaction.ExecuteInteraction();
             }
         }
     }

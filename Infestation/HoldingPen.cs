@@ -1,74 +1,35 @@
 ﻿namespace Infestation
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Enums;
-    using Interactions;
-    using Units;
+    using CommandHendlers;
+    using Factories;
+    using Providers;
 
-    public class HoldingPen
+    public class HoldingPen : IHoldingPen
     {
-        public void ParseCommand(string command)
+        private ICommandFactory _commandProvider;
+        private IReader _reader;
+        private ICommandHandlerProcessor _commandProcessor;
+
+        public HoldingPen(ICommandFactory commandProvider, IReader reader, ICommandHandlerProcessor commandProcessor)
         {
-            string[] commandWordSeparators = new string[] { " " };
-
-            string[] commandWords = command.Split(commandWordSeparators, StringSplitOptions.RemoveEmptyEntries);
-
-            DispatchCommand(commandWords);
-
+            this._commandProvider = commandProvider;
+            this._reader = reader;
+            this._commandProcessor = commandProcessor;
         }
 
-        protected virtual void DispatchCommand(string[] commandWords)
+        public void Start()
         {
-            switch (commandWords[0])
+
+            while (true)
             {
-                case "insert":
-                    this.ExecuteInsertUnitCommand(commandWords);
-                    break;
-                case "proceed":
-                    this.ExecuteProceedSingleIterationCommand();
-                    break;
-                case "supplement":
-                    this.ExecuteAddSupplementCommand(commandWords);
-                    break;
-                case "status":
-                    this.ExecutePrintStatusCommand();
-                    break;
-                default:
-                    break;
-            }
-        }
+                var currentLine = this._reader.Read();
 
-        protected virtual void ExecuteProceedSingleIterationCommand()
-        {
-            var containedUnitsInfo = this.containedUnits.Select((unit) => unit.Info);
+                var command = this._commandProvider.GetCommand();
 
-            IEnumerable<InteractionBase> requestedInteractions =
-                from unit in this.containedUnits
-                select unit.DecideInteraction(containedUnitsInfo);
-
-            requestedInteractions = requestedInteractions.Where((interaction) => interaction != InteractionBase.PassiveInteraction);
-
-            foreach (var interaction in requestedInteractions)
-            {
-                this.ProcessSingleInteraction(interaction);
-            }
-
-            this.containedUnits.RemoveAll((unit) => unit.IsDestroyed);
-        }
-
-        protected virtual void ProcessSingleInteraction(InteractionBase interaction)
-        {
-            switch (interaction.InteractionType)
-            {
-                case InteractionType.Attack:
-                    Unit targetUnit = this.GetUnit(interaction.TargetUnit);
-
-                    targetUnit.DecreaseBaseHealth(interaction.SourceUnit.Power);
-                    break;
-                default:
-                    break;
+                if (command.TranslateInput(currentLine))
+                {
+                    this._commandProcessor.ProcessCommand(command);
+                }
             }
         }
     }

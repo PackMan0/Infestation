@@ -22,6 +22,8 @@
                     return new Weapon();
                 case SupplementTypes.WeaponrySkill:
                     return new WeaponrySkill();
+                default:
+                    return null;
             }
         }
     }

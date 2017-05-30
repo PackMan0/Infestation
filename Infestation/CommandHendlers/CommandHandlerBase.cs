@@ -12,13 +12,10 @@
             {
                 this.ProccessCommandInternal(command);
             }
-
-            if (this.Successor != null)
+            else if (this.Successor != null)
             {
                 this.Successor.ProcessCommand(command);
             }
-
-            throw new InvalidOperationException();
         }
 
         public virtual void SetSuccessor(ICommandHandlerProcessor commandHandler)

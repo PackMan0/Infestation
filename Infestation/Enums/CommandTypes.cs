@@ -5,6 +5,6 @@
         Insert,
         Proceed,
         Status,
-        Suppliment
+        Supplement
     }
 }

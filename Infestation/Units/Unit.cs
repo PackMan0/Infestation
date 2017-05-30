@@ -8,14 +8,29 @@
     using Interactions;
     using Supplements;
 
-    abstract public class Unit : IUnit
+    public abstract class Unit : IUnit
     {
 
-        private int health;
-        private int power;
-        private int aggression;
-        private UnitClassifications classificationToInteract;
-        private ICollection<ISupplement> supplements;
+        private int _health;
+        private int _power;
+        private int _aggression;
+        private bool _canInfest;
+        private UnitClassifications _classificationToInteract;
+        private ICollection<ISupplement> _supplements;
+
+        public Unit(string id, UnitClassifications unitType, int health, int power, int aggression, UnitClassifications classificationToInteract, bool canInfest)
+        {
+            this.Id = id;
+            this.UnitClassification = unitType;
+
+            this._health = health;
+            this._power = power;
+            this._aggression = aggression;
+            this._classificationToInteract = classificationToInteract;
+            this._canInfest = canInfest;
+
+            this._supplements = new List<ISupplement>();
+        }
 
         public string Id { get; }
 
@@ -26,12 +41,12 @@
             get
             {
                 int supplementsBonus = 0;
-                foreach (var supplement in this.supplements)
+                foreach (var supplement in this._supplements)
                 {
                     supplementsBonus += supplement.HealthEffect;
                 }
 
-                return this.health + supplementsBonus;
+                return this._health + supplementsBonus;
             }
         }
         public virtual int Power
@@ -39,12 +54,12 @@
             get
             {
                 int supplementsBonus = 0;
-                foreach (var supplement in this.supplements)
+                foreach (var supplement in this._supplements)
                 {
                     supplementsBonus += supplement.PowerEffect;
                 }
 
-                return this.power + supplementsBonus;
+                return this._power + supplementsBonus;
             }
         }
         public virtual int Aggression
@@ -52,63 +67,34 @@
             get
             {
                 int supplementsBonus = 0;
-                foreach (var supplement in this.supplements)
+                foreach (var supplement in this._supplements)
                 {
                     supplementsBonus += supplement.AggressionEffect;
                 }
 
-                return this.aggression + supplementsBonus;
+                return this._aggression + supplementsBonus;
             }
-        }
-        //public ICollection<ISupplement> Supplements
-        //{
-        //    get
-        //    {
-        //        if (this.supplements == null)
-        //        {
-        //            this.supplements = new List<ISupplement>();
-        //        }
-        //        return this.supplements;
-        //    }
-
-        //    private set
-        //    {
-        //        this.supplements = value;
-        //    }
-        //}
-
-        public Unit(string id, UnitClassifications unitType, int health, int power, int aggression, UnitClassifications classificationToInteract)
-        {
-            this.Id = id;
-            this.UnitClassification = unitType;
-
-            this.health = health;
-            this.power = power;
-            this.aggression = aggression;
-            this.classificationToInteract = classificationToInteract;
-
-            this.supplements = new List<ISupplement>();
         }
 
         public void DecreaseBaseHealth(int quantity)
         {
-            this.health -= quantity;
+            this._health -= quantity;
         }
 
         public virtual void AddSupplement(ISupplement newSupplement)
         {
-            foreach (var supplement in this.supplements)
+            foreach (var supplement in this._supplements)
             {
                 newSupplement.ReactTo(supplement);
             }
 
-            this.supplements.Add(newSupplement);
+            this._supplements.Add(newSupplement);
         }
 
         public override string ToString()
         {
             StringBuilder supplementsBuilder = new StringBuilder();
-            foreach (var supplement in this.supplements)
+            foreach (var supplement in this._supplements)
             {
                 supplementsBuilder.Append(supplement.GetType().Name + ", ");
             }
@@ -123,54 +109,6 @@
                 unitSignature, this.Health, this.Power, this.Aggression, supplementsBuilder);
         }
 
-        public virtual InteractionBase DecideInteraction(IEnumerable<UnitInfo> units)
-        {
-            IEnumerable<UnitInfo> attackableUnits = units.Where((unit) => this.CanAttackUnit(unit));
-
-            UnitInfo optimalAttackableUnit = GetOptimalAttackableUnit(attackableUnits);
-
-            if (optimalAttackableUnit.Id != null)
-            {
-                return new Interaction(new UnitInfo(this), optimalAttackableUnit, InteractionType.Attack);
-            }
-
-            return InteractionBase.PassiveInteraction;
-        }
-
-        protected virtual UnitInfo GetOptimalAttackableUnit(IEnumerable<UnitInfo> attackableUnits)
-        {
-            //This method finds the unit with the least power and attacks it
-            UnitInfo optimalAttackableUnit = new UnitInfo(null, UnitClassifications.Unknown, 0, int.MaxValue, 0);
-
-            foreach (var unit in attackableUnits)
-            {
-                if (unit.Power < optimalAttackableUnit.Power)
-                {
-                    optimalAttackableUnit = unit;
-                }
-            }
-
-            return optimalAttackableUnit;
-        }
-
-        protected virtual bool CanAttackUnit(UnitInfo unit)
-        {
-            bool attackUnit = false;
-            if (this.Id != unit.Id)
-            {
-                if (this.Aggression >= unit.Power)
-                {
-                    attackUnit = true;
-                }
-            }
-            return attackUnit;
-        }
-
-        public UnitInfo Info
-        {
-            get { return new UnitInfo(this); }
-        }
-
         public virtual bool IsDestroyed
         {
             get
@@ -181,7 +119,17 @@
 
         public UnitClassifications ClassificationToInteract
         {
-            get { return this.classificationToInteract; }
+            get { return this._classificationToInteract; }
+        }
+
+        public bool CanInfest
+        {
+            get { return _canInfest; }
+        }
+
+        public void DecreaseHealth(int val)
+        {
+            this._health -= val;
         }
     }
 }

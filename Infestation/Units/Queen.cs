@@ -9,9 +9,8 @@
         const int QueenAggression = 1;
 
         public Queen(string id)
-            : base(id, UnitClassifications.Psionic, QueenHealth, QueenPower, QueenAggression, UnitClassifications.Psionic)
+            : base(id, UnitClassifications.Psionic, QueenHealth, QueenPower, QueenAggression, UnitClassifications.Psionic, true)
         {
         }
     }
 }
-    

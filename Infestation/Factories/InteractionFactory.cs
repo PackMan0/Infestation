@@ -6,21 +6,23 @@
 
     public class InteractionFactory : IInteractionFactory
     {
-        private readonly ISupplementFactory supplementFactory;
+        private readonly ISupplementFactory _supplementFactory;
 
         public InteractionFactory(ISupplementFactory supplementFactory)
         {
-            this.supplementFactory = supplementFactory;
+            this._supplementFactory = supplementFactory;
         }
 
         public IInteraction CreateInteraction(IUnit sourceUnit, IUnit targetUnit)
         {
-            switch (sourceUnit.UnitClassification)
+            if (sourceUnit.CanInfest)
             {
-                    case InteractionType.Attack:
-                        return new AttackInteraction(sourceUnit,targetUnit);
-                    case InteractionType.Infest:
-                        return new InfestInteraction(sourceUnit, targetUnit, this.supplementFactory.CreateSupplement(SupplementTypes.InfestationSpores));
+                return new InfestInteraction(sourceUnit, targetUnit,
+                    this._supplementFactory.CreateSupplement(SupplementTypes.InfestationSpores));
+            }
+            else
+            {
+                return new AttackInteraction(sourceUnit, targetUnit);
             }
         }
     }

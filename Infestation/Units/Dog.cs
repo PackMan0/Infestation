@@ -9,7 +9,7 @@
         const int DogHealth = 4;
 
         public Dog(string id) :
-            base(id, UnitClassifications.Biological, DogHealth, DogPower, DogAggression, UnitClassifications.Biological)
+            base(id, UnitClassifications.Biological, DogHealth, DogPower, DogAggression, UnitClassifications.Biological, false)
         {
         }
     }

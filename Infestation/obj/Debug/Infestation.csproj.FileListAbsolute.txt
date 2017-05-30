@@ -1,0 +1,10 @@
+D:\Infestation\Infestation\bin\Debug\Infestation.exe
+D:\Infestation\Infestation\bin\Debug\Infestation.pdb
+D:\Infestation\Infestation\bin\Debug\Castle.Core.dll
+D:\Infestation\Infestation\bin\Debug\Ninject.dll
+D:\Infestation\Infestation\bin\Debug\Ninject.Extensions.Factory.dll
+D:\Infestation\Infestation\bin\Debug\Castle.Core.xml
+D:\Infestation\Infestation\bin\Debug\Ninject.xml
+D:\Infestation\Infestation\bin\Debug\Ninject.Extensions.Factory.xml
+D:\Infestation\Infestation\obj\Debug\Infestation.exe
+D:\Infestation\Infestation\obj\Debug\Infestation.pdb

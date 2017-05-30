@@ -9,7 +9,7 @@
         public const int HumanHealth = 10;
 
         public Human(string id)
-            : base(id, UnitClassifications.Biological, HumanHealth, HumanPower, HumanAggression, UnitClassifications.Biological)
+            : base(id, UnitClassifications.Biological, HumanHealth, HumanPower, HumanAggression, UnitClassifications.Biological, false)
         {
         }
     }

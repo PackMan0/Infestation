@@ -5,8 +5,14 @@
 
     public interface ICommand
     {
-        CommandTypes Type { get; }
+        CommandTypes CommandType { get; }
 
-        List<string> Parameters { get; }
+        UnitTypes UnitType { get; }
+
+        SupplementTypes SupplementType { get; }
+
+        string UnitId { get; }
+
+        bool TranslateInput(string input);
     }
 }

@@ -1,72 +1,75 @@
 ﻿namespace Infestation.CommandHendlers
 {
     using System;
-    using System.Collections.Generic;
-    using System.Text.RegularExpressions;
     using Enums;
     using Providers;
 
     public class Command : ICommand
     {
+        private string _unitId;
+        private CommandTypes _commandType;
+        private UnitTypes _unitType;
+        private SupplementTypes _supplementType;
+        private readonly IWriter _writer;
 
-        private CommandTypes type;
-        private List<string> parameters;
-        private readonly IWriter writer;
-
-        public Command(string input, IWriter writer)
+        public Command(IWriter writer)
         {
-            this.Parameters = new List<string>();
-            this.writer = writer;
-            this.TranslateInput(input);
+            this._writer = writer;
         }
 
-        public CommandTypes Type
+        public CommandTypes CommandType
         {
-            get
-            {
-                return this.type;
-            }
-
-            private set
-            {
-                this.type = value;
-            }
+            get { return _commandType; }
         }
 
-        public List<string> Parameters
+        public UnitTypes UnitType
         {
-            get
-            {
-                return this.parameters;
-            }
-
-            private set
-            {
-                this.parameters = value;
-            }
+            get { return _unitType; }
         }
 
-        private void TranslateInput(string input)
+        public SupplementTypes SupplementType
+        {
+            get { return _supplementType; }
+        }
+
+        public string UnitId
+        {
+            get { return _unitId; }
+        }
+
+        public bool TranslateInput(string input)
         {
             var commandParams = input.Split(new []{' '}, StringSplitOptions.RemoveEmptyEntries);
 
-
-
-            if (indexOfFirstSeparator < 0)
+            if (commandParams.Length > 0)
             {
-                this.Name = input;
-                return;
+                var commandType = char.ToUpper(commandParams[0][0]) + commandParams[0].Substring(1);
+
+                if (Enum.TryParse(commandType, out this._commandType))
+                {
+                    if (commandParams.Length > 1)
+                    {
+                        if (Enum.TryParse(commandParams[1], out this._unitType) || Enum.TryParse(commandParams[1], out this._supplementType))
+                        {
+                            this._unitId = commandParams[2];
+                        }
+                        else
+                        {
+                            this._writer.Write("Wrong second command parameter!");
+                            return false;
+                        }
+                    }
+                }
+                else
+                {
+                    this._writer.Write("Wrong command!");
+                    return false;
+                }
+                return true;
             }
 
-            this.Name = input.Substring(0, indexOfFirstSeparator);
+            return false;
 
-            if (indexOfOpenComment >= 0)
-            {
-                this.Parameters.Add(input.Substring(indexOfOpenComment + CommentOpenSymbol.Length, indexOfCloseComment - CommentCloseSymbol.Length - indexOfOpenComment));
-                input = regex.Replace(input, string.Empty);
-            }
-
-            this.Parameters.AddRange(input.Substring(indexOfFirstSeparator + 1).Split(new[] { SplitCommandSymbol }, StringSplitOptions.RemoveEmptyEntries));
         }
     }
 }

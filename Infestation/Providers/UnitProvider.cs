@@ -2,35 +2,60 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Factories;
+    using Interactions;
     using Units;
 
-    public class UnitProvider : IInsertUnit, ITakeUnit, ITakeUnitsStatuses, ITakeAllUnits
+    public class UnitProvider : IInsertUnit, ITakeUnit, ITakeUnitsStatuses, ITakeInteractions
     {
-        private ICollection<IUnit> units;
+        private IDictionary<string, IUnit> _units;
+        private readonly IInteractionFactory _interactionFactory;
+
+        public UnitProvider(IInteractionFactory interactionFactory)
+        {
+            this._interactionFactory = interactionFactory;
+            this._units = new Dictionary<string, IUnit>();
+        }
 
         public UnitProvider()
         {
-            this.units = new List<IUnit>();
+            this._units =new Dictionary<string, IUnit>();
         }
         public void InsertUnit(IUnit unit)
         {
-            this.units.Add(unit);
+            if (!this._units.ContainsKey(unit.Id))
+            {
+                this._units.Add(unit.Id, unit);
 
-            this.units = this.units.OrderBy(u => u.Power).ToList();
+                this._units = this._units.Where(u => !u.Value.IsDestroyed).OrderBy(u => u.Value.Health).ToDictionary(pair => pair.Key, pair => pair.Value);
+            }
         }
 
         public IUnit TakeUnit(string id)
         {
-            return this.units.FirstOrDefault(u => u.Id == id);
+            return this._units.FirstOrDefault(u => u.Key == id).Value;
         }
         public IEnumerable<string> TakeUnitsStatuses()
         {
-            return this.units.Select(u => u.ToString());
+            return this._units.Where(u => !u.Value.IsDestroyed).Select(u => u.ToString());
         }
 
-        public ICollection<IUnit> TakeAllUnits()
+        public ICollection<IInteraction> TakeInteractions()
         {
-            return this.units;
+            var interactions = new List<IInteraction>();
+
+            foreach (var pair in this._units)
+            {
+                var targetUnit =
+                    this._units.FirstOrDefault(u => u.Value.UnitClassification == pair.Value.ClassificationToInteract).Value;
+
+                if (targetUnit != null)
+                {
+                    interactions.Add(this._interactionFactory.CreateInteraction(pair.Value, targetUnit));
+                }
+            }
+
+            return interactions;
         }
     }
 }

@@ -30,6 +30,8 @@
                     return new Queen(id);
                 case UnitTypes.Tank:
                     return new Tank(id);
+                default:
+                    return null;
             }
         }
     }

@@ -8,27 +8,27 @@
 
     public class StatusCommandHandler : CommandHandlerBase
     {
-        private readonly IWriter writer;
-        private readonly ITakeUnitsStatuses unitsStatuses;
+        private readonly IWriter _writer;
+        private readonly ITakeUnitsStatuses _unitsStatuses;
 
         public StatusCommandHandler(IWriter writer, ITakeUnitsStatuses unitsStatuses)
         {
-            this.writer = writer;
-            this.unitsStatuses = unitsStatuses;
+            this._writer = writer;
+            this._unitsStatuses = unitsStatuses;
         }
 
         protected override bool CanHandle(ICommand command)
         {
-            return command != null && command.Type == CommandTypes.Status;
+            return command != null && command.CommandType == CommandTypes.Status;
         }
 
         protected override void ProccessCommandInternal(ICommand command)
         {
-            IEnumerable<string> statuses = this.unitsStatuses.TakeUnitsStatuses();
+            IEnumerable<string> statuses = this._unitsStatuses.TakeUnitsStatuses();
 
             foreach (var st in statuses)
             {
-                this.writer.Write(st);
+                this._writer.Write(st);
             }
         }
     }
