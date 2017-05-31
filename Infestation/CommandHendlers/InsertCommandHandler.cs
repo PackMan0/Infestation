@@ -24,7 +24,7 @@
 
         protected override void ProccessCommandInternal(ICommand command)
         {
-                IUnit unit = this._unitFactory.CreateUnit(command.UnitType, command.UnitId);
+                IUnit unit = this._unitFactory.GetUnit(command.UnitType, command.UnitId);
 
                 this._insertUnit.InsertUnit(unit);
         }

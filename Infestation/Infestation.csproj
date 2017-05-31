@@ -65,16 +65,12 @@
     <Compile Include="Enums\CommandTypes.cs" />
     <Compile Include="IHoldingPen.cs" />
     <Compile Include="InfestationModule.cs" />
-    <Compile Include="Factories\CommandFactory.cs" />
     <Compile Include="Providers\ConsoleProvider.cs" />
     <Compile Include="Enums\SupplementTypes.cs" />
     <Compile Include="Enums\UnitTypes.cs" />
     <Compile Include="Factories\IInteractionFactory.cs" />
-    <Compile Include="Factories\InteractionFactory.cs" />
     <Compile Include="Factories\ISupplementFactory.cs" />
     <Compile Include="Factories\IUnitFactory.cs" />
-    <Compile Include="Factories\SupplementFactory.cs" />
-    <Compile Include="Factories\UnitFactory.cs" />
     <Compile Include="HoldingPen.cs" />
     <Compile Include="Interactions\AttackInteraction.cs" />
     <Compile Include="Interactions\IInteraction.cs" />

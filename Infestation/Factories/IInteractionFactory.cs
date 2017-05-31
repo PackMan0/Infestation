@@ -6,6 +6,6 @@
 
     public interface IInteractionFactory
     {
-        IInteraction CreateInteraction(IUnit sourceUnit, IUnit targetUnit);
+        IInteraction GetInteraction(IUnit sourceUnit, IUnit targetUnit);
     }
 }

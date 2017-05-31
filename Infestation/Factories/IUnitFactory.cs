@@ -6,6 +6,6 @@
 
     public interface IUnitFactory
     {
-        IUnit CreateUnit(UnitTypes type, string id);
+        IUnit GetUnit(UnitTypes type, string id);
     }
 }

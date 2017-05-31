@@ -7,6 +7,7 @@
         InfestationSpores,
         PowerCatalyst,
         Weapon,
-        WeaponrySkill
+        WeaponrySkill,
+        None
     }
 }

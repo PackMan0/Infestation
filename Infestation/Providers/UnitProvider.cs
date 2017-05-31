@@ -51,7 +51,7 @@
 
                 if (targetUnit != null)
                 {
-                    interactions.Add(this._interactionFactory.CreateInteraction(pair.Value, targetUnit));
+                    interactions.Add(this._interactionFactory.GetInteraction(pair.Value, targetUnit));
                 }
             }
 

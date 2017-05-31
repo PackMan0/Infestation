@@ -24,7 +24,7 @@
 
         protected override void ProccessCommandInternal(ICommand command)
         {
-            ISupplement supplement = this._supplementFactory.CreateSupplement(command.SupplementType);
+            ISupplement supplement = this._supplementFactory.GetSupplement(command.SupplementType);
             IUnit unit = this._takeUnit.TakeUnit(command.UnitId);
 
             unit.AddSupplement(supplement);

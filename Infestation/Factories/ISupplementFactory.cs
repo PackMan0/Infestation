@@ -5,6 +5,6 @@
 
     public interface ISupplementFactory
     {
-        ISupplement CreateSupplement(SupplementTypes type);
+        ISupplement GetSupplement(SupplementTypes type);
     }
 }

@@ -7,6 +7,7 @@
         Marine,
         Parasite,
         Queen,
-        Tank
+        Tank,
+        None
     }
 }

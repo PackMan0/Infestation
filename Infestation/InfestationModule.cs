@@ -1,11 +1,15 @@
 ﻿namespace Infestation
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using CommandHendlers;
+    using Enums;
     using Factories;
     using Interactions;
     using Ninject;
     using Ninject.Extensions.Factory;
     using Ninject.Modules;
+    using Ninject.Parameters;
     using Providers;
     using Supplements;
     using Units;
@@ -44,10 +48,82 @@
 
             Bind(typeof(IInsertUnit), typeof(ITakeUnit), typeof(ITakeUnitsStatuses), typeof(ITakeInteractions)).To<UnitProvider>().InSingletonScope();
 
-            Bind<ICommandFactory>().To<CommandFactory>();
-            Bind<ISupplementFactory>().To<SupplementFactory>().InSingletonScope();
-            Bind<IInteractionFactory>().To<InteractionFactory>().InSingletonScope();
-            Bind<IUnitFactory>().To<UnitFactory>().InSingletonScope();
+            Bind<ICommandFactory>().ToFactory().InSingletonScope();
+            Bind<ICommand>().ToMethod(context =>
+            {
+                return context.Kernel.Get<Command>();
+            }).NamedLikeFactoryMethod((ICommandFactory commandFactory) => commandFactory.GetCommand());
+
+            Bind<ISupplementFactory>().ToFactory().InSingletonScope();
+            Bind<ISupplement>().ToMethod(context =>
+            {
+                SupplementTypes supplementType =
+                    (SupplementTypes)context.Parameters.Single().GetValue(context, null);
+
+                switch (supplementType)
+                {
+                    case SupplementTypes.AggressionCatalyst:
+                        return context.Kernel.Get<HealthCatalyst>();
+                        case SupplementTypes.HealthCatalyst:
+                        return context.Kernel.Get<HealthCatalyst>();
+                    case SupplementTypes.InfestationSpores:
+                        return context.Kernel.Get<InfestationSpores>();
+                    case SupplementTypes.PowerCatalyst:
+                        return context.Kernel.Get<PowerCatalyst>();
+                    case SupplementTypes.Weapon:
+                        return context.Kernel.Get<Weapon>();
+                    case SupplementTypes.WeaponrySkill:
+                        return context.Kernel.Get<WeaponrySkill>();
+                    default:
+                        return null;
+                }
+
+
+            }).NamedLikeFactoryMethod((ISupplementFactory supplementFactory) => supplementFactory.GetSupplement(SupplementTypes.None));
+
+            Bind<IInteractionFactory>().ToFactory().InSingletonScope();
+            Bind<IInteraction>().ToMethod(context =>
+                {
+                    var  methodParams = context.Parameters;
+
+                    if (((IUnit)methodParams.First().GetValue(context,null)).CanInfest)
+                    {
+                        methodParams.Add(new ConstructorArgument("supplement", context.Kernel.Get<InfestationSpores>()));
+
+                        return context.Kernel.Get<InfestInteraction>(methodParams.ToArray());
+                    }
+                    else
+                    {
+                        return context.Kernel.Get<AttackInteraction>(methodParams.ToArray());
+                    }
+                }).NamedLikeFactoryMethod((IInteractionFactory interactionFactory) => interactionFactory.GetInteraction(null, null));
+
+            Bind<IUnitFactory>().ToFactory().InSingletonScope();
+            Bind<IUnit>().ToMethod(context =>
+            {
+                var unitType = (UnitTypes)context.Parameters.First().GetValue(context,null);
+                var unitArg = new List<IParameter>() {context.Parameters.Last()};
+
+                switch (unitType)
+                {
+                    case UnitTypes.Dog:
+                        return context.Kernel.Get<Dog>(unitArg.ToArray());
+                    case UnitTypes.Human:
+                        return context.Kernel.Get<Human>(unitArg.ToArray());
+                    case UnitTypes.Marine:
+                        unitArg.Add(new ConstructorArgument("defaultSupplement", context.Kernel.Get<WeaponrySkill>()));
+                        return context.Kernel.Get<Marine>(unitArg.ToArray());
+                    case UnitTypes.Parasite:
+                        return context.Kernel.Get<Parasite>(unitArg.ToArray());
+                    case UnitTypes.Queen:
+                        return context.Kernel.Get<Queen>(unitArg.ToArray());
+                    case UnitTypes.Tank:
+                        return context.Kernel.Get<Tank>(unitArg.ToArray());
+                    default:
+                        return null;
+                }
+
+            }).NamedLikeFactoryMethod((IUnitFactory unitFactory) => unitFactory.GetUnit(UnitTypes.None, null));
 
             Bind<IHoldingPen>().To<HoldingPen>().InSingletonScope();
 
