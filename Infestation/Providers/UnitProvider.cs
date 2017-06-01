@@ -27,7 +27,7 @@
             {
                 this._units.Add(unit.Id, unit);
 
-                this._units = this._units.Where(u => !u.Value.IsDestroyed).OrderBy(u => u.Value.Health).ToDictionary(pair => pair.Key, pair => pair.Value);
+                this._units = this._units.Where(u => u.Value.Health >= 0).OrderBy(u => u.Value.Health).ToDictionary(pair => pair.Key, pair => pair.Value);
             }
         }
 
@@ -37,21 +37,21 @@
         }
         public IEnumerable<string> TakeUnitsStatuses()
         {
-            return this._units.Where(u => !u.Value.IsDestroyed).Select(u => u.ToString());
+            return this._units.Where(u => u.Value.Health >= 0).Select(u => u.ToString());
         }
 
         public ICollection<IInteraction> TakeInteractions()
         {
             var interactions = new List<IInteraction>();
 
-            foreach (var pair in this._units)
+            foreach (var sorceUnit in this._units)
             {
                 var targetUnit =
-                    this._units.FirstOrDefault(u => u.Value.UnitClassification == pair.Value.ClassificationToInteract).Value;
+                    this._units.FirstOrDefault(u => u.Value.Id != sorceUnit.Value.Id && u.Value.UnitClassification == sorceUnit.Value.ClassificationToInteract).Value;
 
                 if (targetUnit != null)
                 {
-                    interactions.Add(this._interactionFactory.GetInteraction(pair.Value, targetUnit));
+                    interactions.Add(this._interactionFactory.GetInteraction(sorceUnit.Value, targetUnit));
                 }
             }
 

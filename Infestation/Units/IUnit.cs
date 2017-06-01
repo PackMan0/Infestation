@@ -13,8 +13,6 @@
 
         string Id { get; }
 
-        bool IsDestroyed { get; }
-
         int Power { get; }
 
         bool CanInfest { get; }

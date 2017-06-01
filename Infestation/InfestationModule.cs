@@ -63,7 +63,7 @@
                 switch (supplementType)
                 {
                     case SupplementTypes.AggressionCatalyst:
-                        return context.Kernel.Get<HealthCatalyst>();
+                        return context.Kernel.Get<AggressionCatalyst>();
                         case SupplementTypes.HealthCatalyst:
                         return context.Kernel.Get<HealthCatalyst>();
                     case SupplementTypes.InfestationSpores:

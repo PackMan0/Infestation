@@ -91,6 +91,20 @@
             this._supplements.Add(newSupplement);
         }
 
+        public UnitClassifications ClassificationToInteract
+        {
+            get { return this._classificationToInteract; }
+        }
+
+        public bool CanInfest
+        {
+            get { return _canInfest; }
+        }
+
+        public void DecreaseHealth(int val)
+        {
+            this._health -= val;
+        }
         public override string ToString()
         {
             StringBuilder supplementsBuilder = new StringBuilder();
@@ -107,29 +121,6 @@
 
             return String.Format("{0} [Health: {1}, Power: {2}, Aggression: {3}, Supplements: [{4}]]",
                 unitSignature, this.Health, this.Power, this.Aggression, supplementsBuilder);
-        }
-
-        public virtual bool IsDestroyed
-        {
-            get
-            {
-                return this.Health <= 0;
-            }
-        }
-
-        public UnitClassifications ClassificationToInteract
-        {
-            get { return this._classificationToInteract; }
-        }
-
-        public bool CanInfest
-        {
-            get { return _canInfest; }
-        }
-
-        public void DecreaseHealth(int val)
-        {
-            this._health -= val;
         }
     }
 }
